@@ -328,5 +328,18 @@ Git se usa para coolaborar con un equipo y almacenar cambios de nuestros archivo
         - git status    muestra como va el repositorio
 
 Creamos una carpeta .gitignore para agregar las carpetas y archivos que no queremos que sean agregados a nuestro repositorio ejemplo dentro del archivo podemos incluir:
+                        ```
+                        /venv
+                        /vscode
+                        /__pycache__
+                        data.db
+                        *.pyc
+                        .DS_Store
+                        .venv
+                        ```
 
-        
+        - `git commit -m "" `             Crea un commit con un mesage
+        - `git checkout -- app.py`        Regresa al utimo commit un archivo
+        - `git restore app.py `           Regresa al utimo commit un archivo
+
+### Repositorios remotos
