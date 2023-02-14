@@ -367,3 +367,26 @@ Las acciones que podemos tomar en la situacion atererior son:
                 - Mantener el codigo como antes, esto elimina nuestro codigo
                 - Mantener el nuevo codigo, esto desecha el codigo existente es conveniente hablar primero antes tomar accion
                 - Y por ultimo cambiar el codigo a lo que quramos y hacer commit, por lo que se elimanan los signos >>> y <<< y se cambia el codigo a lo queremos despues de hacer el merge
+
+## Desplegando la aplicacion en linea
+
+Para desplegar la aplicacione en linea:
+
+        1.- Creat una cuenra en render.com
+        2.- Seleccinar new web service
+        3.- Conectamos nuestro git hub y seleccionamos el repositorio a desplegar
+        4.- Asginamos un nombre, un enviroment en este caso Docker, la brach del repositorio, tipo de plan.
+        5.- Creamos web service esto puede tardar ya que es un plan free
+
+## Correr flask con gunicorn en Docker
+
+Gunicron mejora el desempleno de nuestra aplicacion para eso:
+
+        1.- Agregamos "gunicorn" a nuestro archivo requirements.txt
+        2.- En docker file dejamos los siguientes comandos
+                `FROM python:3.10`
+                `WORKDIR /app`
+                COPY requirements.txt .
+                `RUN pip install --no-cache-dir --upgrade -r requirements.txt`
+                `COPY . . `
+                `CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:create_app()"]`
