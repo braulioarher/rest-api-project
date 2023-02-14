@@ -328,18 +328,42 @@ Git se usa para coolaborar con un equipo y almacenar cambios de nuestros archivo
         - git status    muestra como va el repositorio
 
 Creamos una carpeta .gitignore para agregar las carpetas y archivos que no queremos que sean agregados a nuestro repositorio ejemplo dentro del archivo podemos incluir:
-                        ```
-                        /venv
-                        /vscode
-                        /__pycache__
-                        data.db
-                        *.pyc
-                        .DS_Store
-                        .venv
-                        ```
+
+                        `/venv`
+                        `/vscode`
+                        `/__pycache__`
+                        `data.db`
+                        `*.pyc`
+                        `.DS_Store`
+                        `.venv`
+                        
 
         - `git commit -m "" `             Crea un commit con un mesage
         - `git checkout -- app.py`        Regresa al utimo commit un archivo
         - `git restore app.py `           Regresa al utimo commit un archivo
 
-### Repositorios remotos
+### Branches and merging
+
+Las branches o ramas son un nombre para un commit:
+
+        - Una branch regularmente empieza con una branch llamada main o master
+        - HEAD es similar a branch, es el actual commit activo
+
+### Crean nuevas ramas o branches
+
+`git branch new_branch`         -Crea una nueva branch
+`git checkout new_branch`       -Cambia el head a new_branch
+Dentro de la branch main
+`git branch main`
+`git merge new_branch`          -Hace un merge e identifica los cambios echos en las dos branches,
+                                en casos de que las dos branches hayan echo cambios en el mismo archivo y las mismas lineas se crea un "merge coflict"
+
+### Merge conflicts y como resolverlos
+
+en casos de que las dos branches hayan echo cambios en el mismo archivo y las mismas lineas se crea un "merge coflict" al suceder esto en nuestro codigo aparecera unas leyendas las cuales hacen referencia a como era el HEAD antes de hacer el merge y otra etiqueta seprarada por signos de igual que muestra que es lo que viene de la otra rama.
+
+Las acciones que podemos tomar en la situacion atererior son:
+
+                - Mantener el codigo como antes, esto elimina nuestro codigo
+                - Mantener el nuevo codigo, esto desecha el codigo existente es conveniente hablar primero antes tomar accion
+                - Y por ultimo cambiar el codigo a lo que quramos y hacer commit, por lo que se elimanan los signos >>> y <<< y se cambia el codigo a lo queremos despues de hacer el merge
