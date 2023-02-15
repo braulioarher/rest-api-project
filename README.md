@@ -406,7 +406,7 @@ Se recomienda usar ElephantSQL
 Para usar PostgreSQL de forma local debemos:
 
         1.- Crear archivo ".env" dentro del proyecto y agregarlo a .gitignore y agregamos el url copiado de elephant y cambiando `postgre` por `postgresql` ejemplo:
-                `DATABASE_URL=postgresql://wasymbzv:hIBsJQOpaKxowf7VKGDv2t7lbmPsI0__@drona.db.elephantsql.com/wasymbzv`
+                `DATABASE_URL=postgresql://xxxx`
         2.- Agregar psycopg2 a requirements.txt
         3.- Crear archivo ".env.example" para que se corparta en el repositorio
         4.- Importamos en app.py `from dotenv import load_dotenv`
@@ -414,3 +414,14 @@ Para usar PostgreSQL de forma local debemos:
         6.- Ejecutamos el comando en la terminal `flask db migrate` seguido de `flask db upgrade`
         7.- Creamos el archivo `docker-entrypoint.sh`
         8.- En el archivo "Dockerfile" sustituimos `CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:create_app()"]` con `CMD ["/bin/bash", "docker-entrypoint.sh"]`
+        9.- Hacemos commit y subios nuestro repositorio a github
+
+Usar PostgreSQL para produccion
+
+Una vez echo los cambios anteriores a nuestra aplicacion podemos desplegarla en produccion para esto:
+
+        1.- Vamos a render.com
+        2.- Vamos a elephant.com y copiamos el URL
+        3.- En render en la parte de eviroment agregamos una variable llamada `DATABASE_URL` y pegamos el URL de la base de datos asefurandonos de cambiar "postgres" por "postgresql"
+        4.- Guardamos y deveria cargar otro despliegue de la app
+        5.- Listo ya podemos probar la aplicacion
