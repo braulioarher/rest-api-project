@@ -390,3 +390,27 @@ Gunicron mejora el desempleno de nuestra aplicacion para eso:
                 `RUN pip install --no-cache-dir --upgrade -r requirements.txt`
                 `COPY . . `
                 `CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:create_app()"]`
+
+## Desplegar base de datos PostgreSQL
+
+Se recomienda usar ElephantSQL
+
+        1.- creamos una cuenta
+        2.- creamos una nueva instacia
+        3.- asignamos nombre, region y plan
+        4.- seleccionamos nuestra instancia
+        5.- copiamos nuestro url
+
+## Usar PostgreSQL de forma local y en produccion
+
+Para usar PostgreSQL de forma local debemos:
+
+        1.- Crear archivo ".env" dentro del proyecto y agregarlo a .gitignore y agregamos el url copiado de elephant y cambiando `postgre` por `postgresql` ejemplo:
+                `DATABASE_URL=postgresql://wasymbzv:hIBsJQOpaKxowf7VKGDv2t7lbmPsI0__@drona.db.elephantsql.com/wasymbzv`
+        2.- Agregar psycopg2 a requirements.txt
+        3.- Crear archivo ".env.example" para que se corparta en el repositorio
+        4.- Importamos en app.py `from dotenv import load_dotenv`
+        5.- En la funcion de app.py "create_app" agregamos `load_dotenv()`
+        6.- Ejecutamos el comando en la terminal `flask db migrate` seguido de `flask db upgrade`
+        7.- Creamos el archivo `docker-entrypoint.sh`
+        8.- En el archivo "Dockerfile" sustituimos `CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:create_app()"]` con `CMD ["/bin/bash", "docker-entrypoint.sh"]`
