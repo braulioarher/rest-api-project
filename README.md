@@ -45,11 +45,11 @@ Para correr la aplicacion Flask dentro de Docker necesitamos:
 
         -Crear nuestra imagen Docker con el comando:
 
-                docker build -t flask-smorest-api .
+                `docker build -t flask-smorest-api .`
         
         -Crear nuestro contenedor con el comando:
 
-                docker run -d -p 5005:5000 -w /app -v "$(pwd):/app" flask-smorest-api
+                `docker run -d -p 5005:5000 -w /app -v "$(pwd):/app" flask-smorest-api`
 
 ## Como usar Bluprints y MethodView en Flas
 
@@ -425,3 +425,76 @@ Una vez echo los cambios anteriores a nuestra aplicacion podemos desplegarla en 
         3.- En render en la parte de eviroment agregamos una variable llamada `DATABASE_URL` y pegamos el URL de la base de datos asefurandonos de cambiar "postgres" por "postgresql"
         4.- Guardamos y deveria cargar otro despliegue de la app
         5.- Listo ya podemos probar la aplicacion
+
+Nota importante usar el comando `CMD ["/bin/bash", "docker-entrypoint.sh"]` en nuestro docker file
+
+## Como enviar emails con Python y Mailgun
+
+Mailgun es un servicio de entrega de correos que puede usar python para usarlo debemos:
+
+        1.- Crear una cuenta https://www.mailgun.com/
+        2.- Ir al dominio sandbox ya creafo y seleccionar API
+        3.- Lo anterior te da un key y un URL
+        4.- Seleccionamos el leguaje de programacion y nos muestra un ejemplo de integracion
+        5.- Agregar la libreria requests a requirements.txt
+        6.- Agregar `MAILGUN_API_KEY` Y `MAILGUN_DOMAIN` al archivp ".env"
+        7.- Pegar el codigo de ejemplo en nuestro archivo user.py de recursos
+
+## Enviar emails cuando el usuario se registra
+
+Pra enviar email de confirmacion al registrar un usuario:
+
+        1.- Agregamos el campo de email a el modelo "User"
+        2.- Creamos la migracion
+        3.- Creamo un nuevo Schema que contega el campo para email
+        4.- Mandamos a llamar la funcion en el recurso de registro justo despues de agregar el usuario a nuestra base de datos
+        5.- Dentro de mailgun agregamos el correo de prueba a la seccion de authorized receipents
+        6.- Pobar la aplicacion
+
+## Que es una fila de tareas y como usar la base de datos Redis
+
+Una queue es una estructura de datos de la queue puede eliminar informacion, pero un punto clave es que cuando se remueve un dato de ella pasa la posicion a la siguiente pieza de informacion
+
+Para emplear las queue necesitamos implemetar una base de datos Redis para esto:
+        1.- Vamos a render.com
+        2.- Creamos un nueva intacia tipo Redis asiganamos un name, region, noeviction for queues, free plan
+        3.- Agregamos 0.0.0.0/0 a access control, guardamos
+        4.- Copiamos Extenal Redis URL y lo agregamos al archivo ".env" REDIS_URL=xxxxx
+        (Se puede usar redis localmente con docker pero se recomienda usar render pues es mas facil de usar)
+
+## Como poblar y consumir la fila de tareas (task queues) con rq
+
+Para consumir y crear nuestras queues necesitamos:
+
+        1.- Agragar "rq" a "requirements.txt" que es una libreria para administrar redis y consumirla
+        2.- Crear un archivo "tasks.py" en nuestra carpeta de proyecto
+        3.- Movemos funciones a este archivo como la funcion send_simple_message
+        4.- Creamos una nueva funcion que llama a la funcion "send_simple_message"
+        5.- Importamos redis y `from rq import Queue` en "app.py"
+        6.- Creamos la conexion dentro de la funcion "create_app"
+        7.- Dentro de nuestro recurso que envia el correo (User) importamos `from flask import current_app`
+        8.- Agregamos `current_app.queue.enqueue(send_user_registration_email, user.email, user.username)` donde queremos que ejecute la accion
+
+## Como procesar las tareas de segundo plano con rq worker
+
+Despues de haber agregado nuestra tarea a nuestra app los paso a seguir son:
+
+        1.- Crear nuestra imagen docker `docker build -t rest-apis-flask-smorest-rq .`
+        2.- En otra termianl correr el comando `docker run -w /app rest-apis-flask-smorest-rq sh -c "rq worker -u <insert your Redis url here> emails"`
+        3.- Ejecutamos `docker run -p 5000:80`
+        docker run -p 5000:5000 rest-apis-flask-smorest-rq sh -c "flask run --host 0.0.0.0"
+
+## Como enviar correos HTML usando Mailgun y Python
+
+Cada cliente de email tiene pequenas diferencias y soporta diferentes versiones de HTML y CSS por lo que mailgun cuenta con algunos templates para resolver estos problemas los templates los pidemos encontrar en: [github](https://github.com/mailgun/transactional-email-templates) para implementarlas:
+
+        1.- Creamos una carpeta llamada templates/email y el archivo action.html
+        2.- Copiamos el codigo de ejemplo de github y lo pegamos
+        3.- Agregamos un parametro extra llamado html a nuestra funcion "send_simple_message"
+        4.- Importamos jinja2 `import jinja2`
+        5.- Declaramos `template_loader = jinja2.FileSystemLoader("templates")`  
+
+## Como desplegar un background worker en render.com
+
+        1.- Crear un archivo llamados "settings.py" donde viviran las configuraciones de rq
+        2.-
