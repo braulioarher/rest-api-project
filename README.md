@@ -497,4 +497,9 @@ Cada cliente de email tiene pequenas diferencias y soporta diferentes versiones 
 ## Como desplegar un background worker en render.com
 
         1.- Crear un archivo llamados "settings.py" donde viviran las configuraciones de rq
-        2.-
+        2.- Desntro de render.com en nuestro proyecto dentro de enviroment agregamos una "variable enviroment" llamada "REDIS_URL" con el valor obtenido de el URL interno de la base de datos de Redis 
+        3.- Creamo en render.com un nuevo servicio que sera background worker seleccionamos el repositorio del proyecto, asignamos un nombre, dejamos lo campos como estan llenados
+        4.- En avanzado agregamos dos variables de entorno la primera "MAILGUN_DOMAIN", "MAILGUN_API_KEY", "REDIS_URL"
+        5.- Escribimos el coamndo docker:
+                - En la seccione de Docker Command escribimos: `/bin/bash -c cd /app && rq worker -c settings`, mantenemos yes en autodeploy
+        6.- Creamos el background worker
