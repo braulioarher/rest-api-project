@@ -49,7 +49,7 @@ class UserRegister(MethodView):
         db.session.add(user)
         db.session.commit()
 
-        current_app.queue.enqueue(send_user_registration_email, user.email, user.username)
+        send_simple_message(to=user.email, subject="User created successfully", body="You user has been created")
 
         return {"message": "User created successfully"}, 201
 
